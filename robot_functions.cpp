@@ -23,19 +23,12 @@ void is_Done();
 char get_block_testthree();
 char get_block_testfour();
 char get_block_testfive();
-void checkBlocks();
 
 char blocks[20] = {' '};
 char robot = ' ';
 int index = 0;
 int isDone = 0;
 int runcounter = 0;
-
-void checkBlocks() {
-  while (index != 0) {
-    index = shift_left(index);
-  }
-}
 
 void is_Done() {
   if (blocks[0] == 'A') {
@@ -48,6 +41,7 @@ void is_Done() {
       return;
     }
   }
+  cout << "Done" << endl;
   isDone = 1;
 }
 
@@ -69,7 +63,7 @@ void swap() {
   }
   // If robot doesn't have a block, give him one
   if (robot == ' ' || robot == NULL) {
-    robot = get_block_testone();
+    robot = get_block_testfour();
   }
   // If 10th block is empty, take the block from the robot and put it in slot
   // 10, call swap();
@@ -139,8 +133,17 @@ void recursiveShift(int i) {
       robot = blockSwitcher();
     }
   } else {
+    // This is where the problem for 3 and 4 is
     if (test_empty(index, blocks)) {
-      robot = blockSwitcher();
+      index = shift_left(index);
+      if (robot_ltoreq_slot(robot, blocks[index])) {
+        index = shift_right(index);
+        recursiveShift(0);
+      } else{
+        index = shift_right(index);
+        robot = blockSwitcher();
+      }
+    //  recursiveShift(0);
     }
     // If robot block is greater than array block, and array block is not a
     // space
@@ -153,13 +156,15 @@ void recursiveShift(int i) {
   }
 }
 
+
+
 char blockSwitcher() {
   if (index < 0) {
     return robot;
   }
   if (test_empty(index, blocks)) {
     put_block(robot, index, blocks);
-    return get_block_testone();
+    return get_block_testfour();
   } else {
     return switch_blocks(robot, index, blocks);
   }
