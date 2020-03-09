@@ -4,3 +4,5 @@ it places the blocks even if it's out of order. Maybe make the robot start at th
 Or check the block before and see if it's in order, if not, recursively shift all the blocks back in order.
 
 Some of the functions aren't using the provided functions, also the functions for giving the blocks have been slightly modified to prevent trying to get a block when the string is empty. There is probably a better solution for isDone(), but I've been focusing on getting it to work first.
+
+To change the set of blocks being tested, change the functions on lines 72 and 162.
