@@ -23,6 +23,7 @@ void is_Done();
 char get_block_testthree();
 char get_block_testfour();
 char get_block_testfive();
+void specialRecursiveShift();
 
 char blocks[20] = {' '};
 char robot = ' ';
@@ -123,6 +124,17 @@ void swap() {
   return;
 }
 
+void specialRecursiveShift(){
+  // If block is less than or equal, switch blocks, if greater, shift to left and call again
+  if(robot_ltoreq_slot(robot, blocks[index])){
+    robot = blockSwitcher();
+  }
+  else {
+    index = shift_left(index);
+    specialRecursiveShift();
+  }
+}
+
 void recursiveShift(int i) {
   if (i == 0) {
     // If robot block is less than array block, and array block is not a space
@@ -136,12 +148,13 @@ void recursiveShift(int i) {
     // This is where the problem for 3 and 4 is
     if (test_empty(index, blocks)) {
       index = shift_left(index);
+      // If less than or equal to block on the left, place it one block to the right
       if (robot_ltoreq_slot(robot, blocks[index])) {
         index = shift_right(index);
-        recursiveShift(0);
-      } else{
-        index = shift_right(index);
         robot = blockSwitcher();
+      // If block on the left is greater, keep going until you reach a less or equal
+      } else{
+        specialRecursiveShift();
       }
     //  recursiveShift(0);
     }
