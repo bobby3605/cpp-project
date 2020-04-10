@@ -24,12 +24,14 @@ char get_block_testthree();
 char get_block_testfour();
 char get_block_testfive();
 void specialRecursiveShift();
+void specialMatchingThing();
 
 char blocks[20] = {' '};
 char robot = ' ';
 int index = 0;
 int isDone = 0;
 int runcounter = 0;
+int flag = 0;
 
 void is_Done() {
   /*if (blocks[0] == 'A') {
@@ -99,18 +101,21 @@ void swap() {
     if (blocks[index] == robot) {
       index = shift_left(index);
       robot = blockSwitcher();
-      if(index == 0){
-        while(robot == blocks[index]){
-          cout << "array: " << blocks[index] << endl << "robot: " << robot << endl;
-          index = shift_right(index);
-        }
+      if (index == 0) {
+        /*     while(robot == blocks[index]){
+               cout << "array: " << blocks[index] << endl << "robot: " << robot
+           << endl; index = shift_right(index);
+             }
 
-          cout << "array: " << blocks[index] << endl << "robot: " << robot << endl;
-        cout << "sorter thing" << endl;
+               cout << "array: " << blocks[index] << endl << "robot: " << robot
+           << endl; cout << "sorter thing" << endl; index = shift_right(index);
+             robot = blockSwitcher(); */
+        specialMatchingThing();
         robot = blockSwitcher();
+        flag = 1;
       }
       // I think I fixed it, but there's still that loop
-      if(robot_ltoreq_slot(robot, blocks[index])){
+      if (robot_ltoreq_slot(robot, blocks[index])) {
         return;
       }
       index = shift_right(index);
@@ -119,15 +124,16 @@ void swap() {
       // less block is on the robot and a greater block is 1 block behind it
       // If the robot block is less than array block after finding an equal, go
       // backwards until sorted properly
-      // This works except when the index ends up less than 0, if index <0 and blocks are equal, it gets stuck
+      // This works except when the index ends up less than 0, if index <0 and
+      // blocks are equal, it gets stuck
       if (test_empty(index, blocks)) {
         index = shift_left(index);
         if (blocks[index] == robot) {
           index = shift_right(index);
         }
       }
-   
-    // Less than
+
+      // Less than
     } else {
       cout << "Less" << endl;
       print_slots(blocks);
@@ -145,6 +151,13 @@ void swap() {
   }
   return;
 }
+void specialMatchingThing() {
+  cout << "Special" << endl;
+  while (robot == blocks[index]) {
+    index = shift_right(index);
+    specialMatchingThing();
+  }
+}
 
 void specialRecursiveShift() {
   if (test_empty(index, blocks)) {
@@ -161,14 +174,24 @@ void specialRecursiveShift() {
 }
 
 void recursiveShift(int i) {
+  if (flag == 1) {
+    cout << "flag" << endl;
+    //print_slots(blocks);
+    robot = blockSwitcher();
+    flag = 0;
+    //print_slots(blocks);
+    return;
+  }
+
   if (i == 0) {
-    //If blocks[0] is filled, go forward until a greater block is found
-    if(!test_empty(0, blocks) && index == 0){
-      while(!robot_ltoreq_slot(robot, blocks[index])){
+    // If blocks[0] is filled, go forward until a greater block is found
+    if (!test_empty(0, blocks) && index == 0) {
+      while (!robot_ltoreq_slot(robot, blocks[index])) {
         index = shift_right(index);
       }
       cout << "thing" << endl;
       robot = blockSwitcher();
+      print_slots(blocks);
       return;
     }
     // If robot block is less than array block, and array block is not a space
@@ -181,6 +204,14 @@ void recursiveShift(int i) {
       return;
     }
   } else {
+    index = shift_right(index);
+    if (robot == blocks[index]) {
+      specialMatchingThing();
+      robot = blockSwitcher();
+      return;
+    }
+
+    index = shift_left(index);
     // This is where the problem for 3 and 4 is
     if (test_empty(index, blocks)) {
       index = shift_left(index);
