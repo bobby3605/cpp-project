@@ -34,16 +34,20 @@ int runcounter = 0;
 int flag = 0;
 
 void is_Done() {
-  /*if (blocks[0] == 'A') {
-    isDone = 1;
-    return;
-  }*/
-  for (int i = 0; i < 20; i++) {
-    if ((blocks[i] > blocks[i - 1]) || (blocks[i] == ' ') ||
-        (blocks[i - 1] == ' ')) {
+  int tmpindex = index;
+  while(index != 0){
+    index = (index > 0) ? shift_left(index) : shift_right(index);
+  }
+  for(;index<20;){
+    if(test_empty(index, blocks)){
+      while(index != tmpindex){
+        index = (index > tmpindex) ? shift_left(index) : shift_right(index);
+      }
       return;
     }
+    index = shift_right(index);
   }
+  print_slots(blocks);
   cout << "Done" << endl;
   isDone = 1;
 }
@@ -62,7 +66,7 @@ int main() {
 void swap() {
   is_Done();
   if (isDone == 1) {
-    return;
+    exit(1);
   }
   // If robot doesn't have a block, give him one
   if (robot == ' ' || robot == NULL) {
@@ -155,6 +159,10 @@ void swap() {
   return;
 }
 void specialMatchingThing() {
+  is_Done();
+  if(isDone == 1){
+    exit(1);
+  }
   cout << "Special" << endl;
   while (robot == blocks[index]) {
     index = shift_right(index);
