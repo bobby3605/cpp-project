@@ -98,7 +98,8 @@ void swap() {
     if (blocks[index] == robot) {
       index = shift_left(index);
       robot = blockSwitcher();
-      if(robot<blocks[index]){
+      // I think I fixed it, but there's still that loop
+      if(robot_ltoreq_slot(robot, blocks[index])){
         return;
       }
       index = shift_right(index);
