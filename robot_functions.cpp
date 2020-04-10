@@ -32,11 +32,11 @@ int isDone = 0;
 int runcounter = 0;
 
 void is_Done() {
-  if (blocks[0] == 'A') {
+  /*if (blocks[0] == 'A') {
     isDone = 1;
     return;
-  }
-  for (int i = 1; i < 20; i++) {
+  }*/
+  for (int i = 0; i < 20; i++) {
     if ((blocks[i] > blocks[i - 1]) || (blocks[i] == ' ') ||
         (blocks[i - 1] == ' ')) {
       return;
@@ -58,7 +58,7 @@ int main() {
 }
 
 void swap() {
-   is_Done();
+  is_Done();
   if (isDone == 1) {
     return;
   }
@@ -69,22 +69,12 @@ void swap() {
   // If 10th block is empty, take the block from the robot and put it in slot
   // 10, call swap();
   print_slots(blocks);
-  cout << "Robot: " << robot << endl;
+  cout << "Robot: " << robot << endl << "Index: " << index << endl;
   if (test_empty(9, blocks)) {
     while (index != 9) {
       index = (index > 9) ? shift_left(index) : shift_right(index);
     }
     robot = blockSwitcher();
-    // robot = switch_blocks(robot, index, blocks);
-    // Block has been placed in the 10th slot, now it is moved back to the
-    // beginning
- /*   robot = blockSwitcher();
-    robot = blockSwitcher();
-    while (index > 0) {
-      index = shift_left(index);
-    }
-    robot = blockSwitcher();
-    runcounter++;*/
     return;
   }
   // Check for outside array bounds
@@ -109,14 +99,30 @@ void swap() {
       robot = blockSwitcher();
       index = shift_right(index);
       index = shift_right(index);
-      // Less than
+      // Problem for 3 and 4, if block is equal and swapped block is less, now a
+      // less block is on the robot and a greater block is 1 block behind it
+      // If the robot block is less than array block after finding an equal, go
+      // backwards until sorted properly
+      // This works except when the index ends up less than 0, if index <0 and blocks are equal, it gets stuck
+      if (test_empty(index, blocks)) {
+        index = shift_left(index);
+        if (blocks[index] == robot) {
+          index = shift_right(index);
+        }
+      }
+
+    // Less than
     } else {
+      cout << "Less" << endl;
+      print_slots(blocks);
       recursiveShift(0);
       return;
     }
     return;
     // Greater than
   } else {
+    cout << "Greater" << index << endl;
+    print_slots(blocks);
     // index = shift_right(index);
     recursiveShift(1);
     return;
@@ -124,13 +130,16 @@ void swap() {
   return;
 }
 
-void specialRecursiveShift(){
-  // If block is less than or equal, switch blocks, if greater, shift to left and call again
-  if(robot_ltoreq_slot(robot, blocks[index])){
+void specialRecursiveShift() {
+  if (test_empty(index, blocks)) {
     robot = blockSwitcher();
   }
-  else {
-    index = shift_left(index);
+  // If block is less than or equal, switch blocks, if greater, shift to right
+  // and call again
+  if (robot_ltoreq_slot(robot, blocks[index])) {
+    robot = blockSwitcher();
+  } else {
+    index = shift_right(index);
     specialRecursiveShift();
   }
 }
@@ -141,22 +150,26 @@ void recursiveShift(int i) {
     if (robot_ltoreq_slot(robot, blocks[index]) && blocks[index] != ' ') {
       index = shift_left(index);
       recursiveShift(0);
+      // Another 3,4 problem
     } else {
       robot = blockSwitcher();
+      return;
     }
   } else {
     // This is where the problem for 3 and 4 is
     if (test_empty(index, blocks)) {
       index = shift_left(index);
-      // If less than or equal to block on the left, place it one block to the right
+      // If less than or equal to block on the left, place it one block to the
+      // right
       if (robot_ltoreq_slot(robot, blocks[index])) {
         index = shift_right(index);
         robot = blockSwitcher();
-      // If block on the left is greater, keep going until you reach a less or equal
-      } else{
+        // If block on the left is greater, keep going until you reach a less or
+        // equal
+      } else {
         specialRecursiveShift();
       }
-    //  recursiveShift(0);
+      //  recursiveShift(0);
     }
     // If robot block is greater than array block, and array block is not a
     // space
@@ -168,8 +181,6 @@ void recursiveShift(int i) {
     }
   }
 }
-
-
 
 char blockSwitcher() {
   if (index < 0) {
@@ -214,18 +225,18 @@ char get_block(void) {
 // Example function call: print_slots(slot_array);
 
 void print_slots(char slots[]) {
-  unsigned int j = 1;
-  for (j = 1; j <= 20; j++) {
-    cout << setw(3) << j;
+  /* unsigned int j = 1;
+   for (j = 1; j <= 20; j++) {
+     cout << setw(3) << j;
+   }
+   cout << endl;
+   for (j = 0; j < 20; j++) {
+     cout << setw(3) << slots[j];
+   }
+   cout << endl;*/
+  for (int i = 0; i < 20; i++) {
+    cout << i << ": " << blocks[i] << endl;
   }
-  cout << endl;
-  for (j = 0; j < 20; j++) {
-    cout << setw(3) << slots[j];
-  }
-  cout << endl;
-  /* for (int i = 0; i < 20; i++) {
-     cout << i << ": " << blocks[i] << endl;
-   }*/
 }
 // Function put_block
 // This function stores a character into the character array representing the
