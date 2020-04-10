@@ -83,6 +83,7 @@ void swap() {
       index = shift_right(index);
     }
     robot = blockSwitcher();
+    index = shift_right(index);
     return;
   } else if (index > 19) {
     while (index != 19) {
@@ -97,6 +98,9 @@ void swap() {
     if (blocks[index] == robot) {
       index = shift_left(index);
       robot = blockSwitcher();
+      if(robot<blocks[index]){
+        return;
+      }
       index = shift_right(index);
       index = shift_right(index);
       // Problem for 3 and 4, if block is equal and swapped block is less, now a
@@ -110,7 +114,7 @@ void swap() {
           index = shift_right(index);
         }
       }
-
+   
     // Less than
     } else {
       cout << "Less" << endl;
