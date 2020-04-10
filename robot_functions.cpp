@@ -70,7 +70,7 @@ void swap() {
   }
   // If robot doesn't have a block, give him one
   if (robot == ' ' || robot == NULL) {
-    robot = get_block_testone();
+    robot = get_block_testtwo();
   }
   // If 10th block is empty, take the block from the robot and put it in slot
   // 10, call swap();
@@ -265,7 +265,7 @@ char blockSwitcher() {
   }
   if (test_empty(index, blocks)) {
     put_block(robot, index, blocks);
-    return get_block_testone();
+    return get_block_testtwo();
   } else {
     return switch_blocks(robot, index, blocks);
   }
