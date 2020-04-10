@@ -25,6 +25,7 @@ char get_block_testfour();
 char get_block_testfive();
 void specialRecursiveShift();
 void specialMatchingThing();
+char blockGetter();
 
 char blocks[20] = {' '};
 char robot = ' ';
@@ -32,9 +33,14 @@ int index = 0;
 int isDone = 0;
 int runcounter = 0;
 int flag = 0;
+int tmpindex;
+
+char blockGetter(){
+  return get_block_testfive();
+}
 
 void is_Done() {
-  int tmpindex = index;
+  tmpindex = index;
   while(index != 0){
     index = (index > 0) ? shift_left(index) : shift_right(index);
   }
@@ -70,7 +76,7 @@ void swap() {
   }
   // If robot doesn't have a block, give him one
   if (robot == ' ' || robot == NULL) {
-    robot = get_block_testtwo();
+    robot = blockGetter();
   }
   // If 10th block is empty, take the block from the robot and put it in slot
   // 10, call swap();
@@ -159,15 +165,19 @@ void swap() {
   return;
 }
 void specialMatchingThing() {
+  cout << "i: " << index << endl;
   is_Done();
+  cout << "i: " << index << endl;
   if(isDone == 1){
     exit(1);
   }
   cout << "Special" << endl;
-  if(index = 19){
+  if(index == 19){
     return;
   }
+  cout <<"I not 19" << endl;
   while (robot == blocks[index]) {
+    cout << "R: " << robot << "B: " << blocks[index] << endl;
     index = shift_right(index);
     specialMatchingThing();
   }
@@ -227,7 +237,9 @@ void recursiveShift(int i) {
 
     index = shift_right(index);
     if (robot == blocks[index]) {
+      cout << "BINDEX: " << index << endl;
       specialMatchingThing();
+      cout << "INDEX: " << index << endl;
       robot = blockSwitcher();
       return;
     }
@@ -265,7 +277,7 @@ char blockSwitcher() {
   }
   if (test_empty(index, blocks)) {
     put_block(robot, index, blocks);
-    return get_block_testtwo();
+    return blockGetter();
   } else {
     return switch_blocks(robot, index, blocks);
   }
