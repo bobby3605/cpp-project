@@ -79,6 +79,7 @@ void swap() {
   }
   // Check for outside array bounds
   if (index < 0) {
+    cout << "Index less than 0" << endl;
     while (index != 0) {
       index = shift_right(index);
     }
@@ -98,6 +99,16 @@ void swap() {
     if (blocks[index] == robot) {
       index = shift_left(index);
       robot = blockSwitcher();
+      if(index == 0){
+        while(robot == blocks[index]){
+          cout << "array: " << blocks[index] << endl << "robot: " << robot << endl;
+          index = shift_right(index);
+        }
+
+          cout << "array: " << blocks[index] << endl << "robot: " << robot << endl;
+        cout << "sorter thing" << endl;
+        robot = blockSwitcher();
+      }
       // I think I fixed it, but there's still that loop
       if(robot_ltoreq_slot(robot, blocks[index])){
         return;
@@ -151,6 +162,15 @@ void specialRecursiveShift() {
 
 void recursiveShift(int i) {
   if (i == 0) {
+    //If blocks[0] is filled, go forward until a greater block is found
+    if(!test_empty(0, blocks) && index == 0){
+      while(!robot_ltoreq_slot(robot, blocks[index])){
+        index = shift_right(index);
+      }
+      cout << "thing" << endl;
+      robot = blockSwitcher();
+      return;
+    }
     // If robot block is less than array block, and array block is not a space
     if (robot_ltoreq_slot(robot, blocks[index]) && blocks[index] != ' ') {
       index = shift_left(index);
