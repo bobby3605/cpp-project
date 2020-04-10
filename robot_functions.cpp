@@ -208,6 +208,19 @@ void recursiveShift(int i) {
   }
 
   if (i == 0) {
+
+    if(robot == blocks[index] && index == 0){
+      index = shift_right(index);
+      if(robot_ltoreq_slot(robot, blocks[index])){
+        robot = blockSwitcher();
+        specialRecursiveShift();
+        return;
+      }
+      index = shift_left(index);
+    }
+
+    /////////////////////////////TEST_EMPTY ISNT VALID FOR THE PROJECT
+
     // If blocks[0] is filled, go forward until a greater block is found
     if (!test_empty(0, blocks) && index == 0) {
       while (!robot_ltoreq_slot(robot, blocks[index])) {
@@ -260,6 +273,13 @@ void recursiveShift(int i) {
       }
       //  recursiveShift(0);
     }
+    // If empty space after blocks that are in order
+    index = shift_right(index);
+    if(test_empty(robot, blocks)){
+      robot = blockSwitcher();
+      return;
+    }
+    index = shift_left(index);
     // If robot block is greater than array block, and array block is not a
     // space
     if (!robot_ltoreq_slot(robot, blocks[index]) && blocks[index] != ' ') {
