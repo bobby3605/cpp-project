@@ -120,6 +120,9 @@ void swap() {
       }
       index = shift_right(index);
       index = shift_right(index);
+      while(index > 19){
+        index = shift_left(index);
+      }
       // Problem for 3 and 4, if block is equal and swapped block is less, now a
       // less block is on the robot and a greater block is 1 block behind it
       // If the robot block is less than array block after finding an equal, go
