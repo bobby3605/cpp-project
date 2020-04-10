@@ -273,11 +273,22 @@ void recursiveShift(int i) {
       }
       //  recursiveShift(0);
     }
-    // If empty space after blocks that are in order
+    // If empty space after blocks that are in order, and held block is greater than previous block
     index = shift_right(index);
-    if(test_empty(robot, blocks)){
-      robot = blockSwitcher();
-      return;
+    if(test_empty(index, blocks)){
+      index = shift_left(index);
+      if (!robot_ltoreq_slot(robot, blocks[index])) {
+        index = shift_right(index);
+        cout << "Called it" << endl;
+        robot = blockSwitcher();
+        return;
+      }
+    }
+    //index = shift_left(index);
+
+    // If block after is less than held block
+    if(robot_ltoreq_slot(robot, blocks[index])){
+      specialRecursiveShift();
     }
     index = shift_left(index);
     // If robot block is greater than array block, and array block is not a
